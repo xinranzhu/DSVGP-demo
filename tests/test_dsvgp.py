@@ -78,7 +78,9 @@ test_nll = -torch.distributions.Normal(means[::num_directions+1], variances.sqrt
 print(f"At {test_n} testing points, MSE: {test_mse:.4e}, nll: {test_nll:.4e}.")
 print(f"Training time: {(t2-t1):.2f} sec, testing time: {(t3-t2):.2f} sec")
 
-# call plot to plot the results
+# TODO: call plot_testfun to plot the results
+
+
 
 plot=0
 if plot == 1:

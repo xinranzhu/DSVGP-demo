@@ -71,3 +71,4 @@ test_nll = -torch.distributions.Normal(means, variances.sqrt()).log_prob(test_y.
 print(f"At {test_n} testing points, MSE: {test_mse:.4e}, nll: {test_nll:.4e}")
 print(f"Training time: {(t2-t1)/1e9:.2f} sec, testing time: {(t3-t2)/1e9:.2f} sec")
 
+# TODO: call plot_testfun to plot the results
