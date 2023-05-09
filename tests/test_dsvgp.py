@@ -9,6 +9,7 @@ sys.path.append("../utils")
 from dsvgp import init_gp, train_gp, eval_gp
 from metrics import MSE
 import testfun
+import pickle as pkl
 
 train_n = 600
 test_n = 1000
@@ -20,16 +21,34 @@ learning_rate = 0.01
 gamma  = 0.2
 mll_type = "ELBO"
 verbose = True
+load_model = False
+save_model = False
 torch.random.manual_seed(0)
 
 
-# training and testing data
+
+# TODO: check if data is already saved (check if data file exists), load data if exists, otherwise generate the data
+
+
+# Hints for data saving and loading
+# save training data (x and y)
+# Example: pkl.dump(train_x, open('./train_x.pkl' ,'wb'))
+
+# read training data (x and y)
+# Example: train_x = pkl.load(open('./train_x.pkl' ,'rb'))
+
+
+# generate training and testing data
 train_x = torch.rand(train_n,dim)
 test_x = torch.rand(test_n,dim)
 train_y = testfun.f(train_x, deriv=True)
 test_y = testfun.f(test_x, deriv=True)
+
+
+
 if torch.cuda.is_available():
     train_x, train_y, test_x, test_y = train_x.cuda(), train_y.cuda(), test_x.cuda(), test_y.cuda()
+
 
 # initialize model 
 # initialize inducing points and directions from data
@@ -40,25 +59,34 @@ inducing_points = train_x[rand_index, :]
 model, likelihood = init_gp(dim, num_inducing, num_directions, inducing_points=inducing_points)
 
 # train
-print("\n\n---DirectionalGradVGP---")
-print(f"Start training with {train_n} trainig data of dim {dim}")
-print(f"VI setups: {num_inducing} inducing points, {num_directions} inducing directions")
-args={"verbose":True}
-t1 = time.time()	
-model,likelihood = train_gp(
-    model,
-    likelihood,
-    train_x,
-    train_y,
-    num_directions=num_directions,
-    num_epochs=num_epochs, 
-    learning_rate=learning_rate,
-    verbose=verbose,
-)
-t2 = time.time()	
+if load_model:
+    # TODO: loda model
+    # replace "pass" by something like model.load_state() to load model
+    pass
+else:
+    print("\n\n---DirectionalGradVGP---")
+    print(f"Start training with {train_n} trainig data of dim {dim}")
+    print(f"VI setups: {num_inducing} inducing points, {num_directions} inducing directions")
+    args={"verbose":True}
+    t1 = time.time()	
+    model,likelihood = train_gp(
+        model,
+        likelihood,
+        train_x,
+        train_y,
+        num_directions=num_directions,
+        num_epochs=num_epochs, 
+        learning_rate=learning_rate,
+        verbose=verbose,
+    )
+    t2 = time.time()	
 
-# save the model
-# torch.save(model.state_dict(), "../data/test_dvi_basic.model")
+
+if save_model:
+    # TODO: save the model
+    # replace pass by something like torch.save(model, path)
+    pass
+
 
 # test
 means, variances = eval_gp( 

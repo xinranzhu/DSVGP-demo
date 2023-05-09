@@ -52,7 +52,7 @@ model,likelihood = train_gp(
     learning_rate=learning_rate,
     gamma=gamma,
     verbose=verbose,
-    )
+)
 t2 = time.time_ns()	
 
 # model evaluation (prediction on test set)
@@ -63,6 +63,9 @@ means, variances = eval_gp(
     test_y,
 )
 t3 = time.time_ns()	
+
+
+
 
 # tesing metric MSE
 test_mse = MSE(test_y.cpu(),means)
